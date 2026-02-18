@@ -14,10 +14,10 @@ export function MainContent() {
     <div className="flex-1 overflow-y-auto p-6">
       <div className="mx-auto max-w-3xl">
         <div className="mb-6">
-          <h2 className="text-lg font-semibold text-gray-800">
+          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
             Job Descriptions
           </h2>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-gray-500 dark:text-gray-400">
             Paste job descriptions below. Add more with the + button.
           </p>
         </div>

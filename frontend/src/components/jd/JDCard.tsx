@@ -21,10 +21,10 @@ export function JDCard({ card, index }: JDCardProps) {
 
   return (
     <div
-      className={`rounded-xl border bg-white p-4 shadow-sm transition-all ${
+      className={`rounded-xl border bg-white p-4 shadow-sm transition-all dark:bg-gray-800 ${
         card.isMuted
-          ? "border-gray-200 opacity-60"
-          : "border-gray-300 hover:border-blue-300"
+          ? "border-gray-200 opacity-60 dark:border-gray-700"
+          : "border-gray-300 hover:border-blue-300 dark:border-gray-600 dark:hover:border-blue-500"
       }`}
     >
       <div className="mb-3 flex items-center justify-between">
@@ -38,7 +38,7 @@ export function JDCard({ card, index }: JDCardProps) {
         <div className="flex items-center gap-1">
           <button
             onClick={() => toggleMute(card.id)}
-            className="rounded p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+            className="rounded p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-700 dark:hover:text-gray-300"
             title={card.isMuted ? "Unmute" : "Mute"}
           >
             {card.isMuted ? (
@@ -54,7 +54,7 @@ export function JDCard({ card, index }: JDCardProps) {
           </button>
           <button
             onClick={() => removeCard(card.id)}
-            className="rounded p-1.5 text-gray-400 hover:bg-red-50 hover:text-red-500"
+            className="rounded p-1.5 text-gray-400 hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-900/20 dark:hover:text-red-400"
             title="Remove"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -67,14 +67,13 @@ export function JDCard({ card, index }: JDCardProps) {
         value={card.text}
         onChange={(e) => handleTextChange(e.target.value)}
         onPaste={(e) => {
-          // Trigger auto-label immediately on paste
           setTimeout(() => {
             const text = (e.target as HTMLTextAreaElement).value;
             triggerAutoLabel(card.id, text);
           }, 0);
         }}
         placeholder="Paste a job description here..."
-        className="h-48 w-full resize-y rounded-lg border border-gray-200 bg-gray-50 p-3 text-sm focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-400"
+        className="h-48 w-full resize-y rounded-lg border border-gray-200 bg-gray-50 p-3 text-sm focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-400 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:placeholder-gray-500"
       />
     </div>
   );

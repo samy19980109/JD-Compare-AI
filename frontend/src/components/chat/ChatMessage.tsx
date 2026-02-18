@@ -17,13 +17,13 @@ export function ChatMessage({ message }: ChatMessageProps) {
         className={`max-w-[85%] rounded-2xl px-4 py-2.5 ${
           isUser
             ? "bg-blue-600 text-white"
-            : "bg-gray-100 text-gray-800"
+            : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-100"
         }`}
       >
         {isUser ? (
           <p className="text-sm whitespace-pre-wrap">{message.content}</p>
         ) : (
-          <div className="prose prose-sm max-w-none">
+          <div className="prose prose-sm max-w-none dark:prose-invert">
             {message.content ? (
               <ReactMarkdown>{message.content}</ReactMarkdown>
             ) : message.isStreaming ? (

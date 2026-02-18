@@ -14,7 +14,7 @@ export function ChatInput() {
   }, [input, isStreaming, sendMessage]);
 
   return (
-    <div className="border-t border-gray-200 p-4">
+    <div className="border-t border-gray-200 p-4 dark:border-gray-700">
       <div className="flex gap-2">
         <textarea
           value={input}
@@ -27,7 +27,7 @@ export function ChatInput() {
           }}
           placeholder="Ask about the job descriptions..."
           rows={2}
-          className="flex-1 resize-none rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-400"
+          className="flex-1 resize-none rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-400 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-500"
           disabled={isStreaming}
         />
         <button
@@ -38,7 +38,7 @@ export function ChatInput() {
           {isStreaming ? "..." : "Send"}
         </button>
       </div>
-      <p className="mt-1 text-xs text-gray-400">
+      <p className="mt-1 text-xs text-gray-400 dark:text-gray-500">
         Press Ctrl+Enter to send
       </p>
     </div>

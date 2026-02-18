@@ -19,13 +19,13 @@ export function JDLabel({ index, title, company, isLoading, isMuted }: JDLabelPr
     <div className="flex items-center gap-2">
       <span
         className={`text-sm font-semibold ${
-          isMuted ? "text-gray-400 line-through" : "text-gray-800"
+          isMuted ? "text-gray-400 line-through dark:text-gray-500" : "text-gray-800 dark:text-gray-200"
         }`}
       >
         {isLoading ? "Detecting..." : label}
       </span>
       {isMuted && (
-        <span className="rounded bg-gray-200 px-1.5 py-0.5 text-xs text-gray-500">
+        <span className="rounded bg-gray-200 px-1.5 py-0.5 text-xs text-gray-500 dark:bg-gray-700 dark:text-gray-400">
           Muted
         </span>
       )}

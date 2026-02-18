@@ -16,8 +16,8 @@ export function ChatMessageList() {
     return (
       <div className="flex flex-1 items-center justify-center p-8 text-center">
         <div>
-          <p className="text-lg font-medium text-gray-400">No messages yet</p>
-          <p className="mt-1 text-sm text-gray-400">
+          <p className="text-lg font-medium text-gray-400 dark:text-gray-500">No messages yet</p>
+          <p className="mt-1 text-sm text-gray-400 dark:text-gray-500">
             Paste job descriptions and ask questions to compare them
           </p>
         </div>
