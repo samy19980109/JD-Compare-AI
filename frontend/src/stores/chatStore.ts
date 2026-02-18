@@ -3,15 +3,19 @@ import { v4 as uuidv4 } from "uuid";
 import type { ChatMessageUI } from "@/types/chat";
 import type { Provider } from "@/types/api";
 
+type Tab = "jd" | "chat";
+
 interface ChatStore {
   messages: ChatMessageUI[];
   isStreaming: boolean;
   error: string | null;
   provider: Provider;
   chatOpen: boolean;
+  activeTab: Tab;
 
   setProvider: (provider: Provider) => void;
   setChatOpen: (open: boolean) => void;
+  setActiveTab: (tab: Tab) => void;
 
   addUserMessage: (content: string) => void;
   startAssistantMessage: () => string;
@@ -27,9 +31,11 @@ export const useChatStore = create<ChatStore>((set) => ({
   error: null,
   provider: "openai",
   chatOpen: false,
+  activeTab: "jd",
 
   setProvider: (provider) => set({ provider }),
   setChatOpen: (open) => set({ chatOpen: open }),
+  setActiveTab: (tab) => set({ activeTab: tab }),
 
   addUserMessage: (content) =>
     set((state) => ({

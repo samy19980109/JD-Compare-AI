@@ -8,20 +8,18 @@ export function ChatPanel() {
   const error = useChatStore((s) => s.error);
 
   return (
-    <div className="flex h-full flex-col">
-      <div className="border-b border-gray-200 px-4 py-3 dark:border-gray-700">
-        <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300">AI Chat</h2>
-        <p className="text-xs text-gray-400 dark:text-gray-500">
-          Ask questions about your job descriptions
-        </p>
+    <div className="flex h-full flex-1 flex-col overflow-hidden">
+      <div className="mx-auto w-full max-w-4xl flex-1 overflow-y-auto px-6 py-4">
+        {error && (
+          <div className="mb-4 rounded-lg bg-red-50 px-3 py-2 text-xs text-red-600 dark:bg-red-900/20 dark:text-red-400">
+            {error}
+          </div>
+        )}
+        <ChatMessageList />
       </div>
-      {error && (
-        <div className="mx-4 mt-2 rounded-lg bg-red-50 px-3 py-2 text-xs text-red-600 dark:bg-red-900/20 dark:text-red-400">
-          {error}
-        </div>
-      )}
-      <ChatMessageList />
-      <ChatInput />
+      <div className="mx-auto w-full max-w-4xl px-6 py-4">
+        <ChatInput />
+      </div>
     </div>
   );
 }

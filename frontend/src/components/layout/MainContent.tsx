@@ -6,7 +6,7 @@ import { JDCardList } from "@/components/jd/JDCardList";
 
 export function MainContent() {
   const cards = useJDStore((s) => s.cards);
-  const { chatOpen, setChatOpen } = useChatStore();
+  const setActiveTab = useChatStore((s) => s.setActiveTab);
 
   const hasContent = cards.some((c) => c.text.trim().length > 0);
 
@@ -24,10 +24,10 @@ export function MainContent() {
 
         <JDCardList />
 
-        {hasContent && !chatOpen && (
+        {hasContent && (
           <div className="mt-6 text-center">
             <button
-              onClick={() => setChatOpen(true)}
+              onClick={() => setActiveTab("chat")}
               className="rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-blue-700"
             >
               Start Analysis

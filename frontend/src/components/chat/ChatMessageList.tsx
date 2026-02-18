@@ -14,7 +14,7 @@ export function ChatMessageList() {
 
   if (messages.length === 0) {
     return (
-      <div className="flex flex-1 items-center justify-center p-8 text-center">
+      <div className="flex h-full items-center justify-center p-8 text-center">
         <div>
           <p className="text-lg font-medium text-gray-400 dark:text-gray-500">No messages yet</p>
           <p className="mt-1 text-sm text-gray-400 dark:text-gray-500">
@@ -26,7 +26,7 @@ export function ChatMessageList() {
   }
 
   return (
-    <div className="flex flex-1 flex-col gap-3 overflow-y-auto p-4">
+    <div className="flex flex-col gap-3">
       {messages.map((msg) => (
         <ChatMessage key={msg.id} message={msg} />
       ))}
