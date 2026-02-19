@@ -39,6 +39,11 @@
 - Dark/light mode toggle with persistent preferences
 - Responsive design optimized for desktop workflows
 
+### 🗂️ **Workspace Management**
+- Create and switch between multiple workspaces
+- Persistent JD sets per workspace
+- Isolate different job searches or clients
+
 ### ⚡ **Performance Optimizations**
 - Server-side rendering with Next.js 15 App Router
 - State management with Zustand for minimal re-renders
@@ -51,7 +56,7 @@
 
 ### **Frontend Stack**
 ```
-Next.js 15 (App Router)     → React 19 + TypeScript
+Next.js 15 (App Router)     → React 19 + TypeScript 5.7
 Tailwind CSS 4.0            → Utility-first styling
 Zustand 5                   → Lightweight state management
 React Markdown              → Rich content rendering
@@ -60,7 +65,7 @@ Lucide React                → Modern iconography
 
 ### **Backend Stack**
 ```
-FastAPI                     → High-performance Python API
+FastAPI 0.115               → High-performance Python API
 SQLAlchemy 2.0 (Async)      → Type-safe ORM with async support
 PostgreSQL 16               → Production-grade database
 Alembic                     → Database migrations
@@ -72,7 +77,6 @@ Pydantic Settings           → Environment-based configuration
 ```
 Docker Compose              → Local development environment
 Uvicorn (ASGI)              → Lightning-fast async server
-pytest + pytest-asyncio     → Comprehensive test coverage
 Ruff + MyPy                 → Modern linting and type checking
 ```
 
@@ -130,29 +134,83 @@ npm run dev
 jd-compare-ai/
 ├── frontend/                 # Next.js 15 Application
 │   ├── src/
-│   │   ├── app/             # App Router pages
-│   │   ├── components/      # Reusable UI components
+│   │   ├── app/             # App Router pages (layout.tsx, page.tsx)
+│   │   ├── components/
 │   │   │   ├── chat/        # Chat interface components
+│   │   │   │   ├── ChatInput.tsx
+│   │   │   │   ├── ChatMessage.tsx
+│   │   │   │   ├── ChatMessageList.tsx
+│   │   │   │   ├── ChatPanel.tsx
+│   │   │   │   └── StreamingIndicator.tsx
 │   │   │   ├── jd/          # Job description components
-│   │   │   └── layout/      # Layout components
+│   │   │   │   ├── JDCard.tsx
+│   │   │   │   ├── JDCardList.tsx
+│   │   │   │   ├── JDAddButton.tsx
+│   │   │   │   └── JDLabel.tsx
+│   │   │   ├── layout/      # Layout components
+│   │   │   │   ├── Header.tsx
+│   │   │   │   ├── MainContent.tsx
+│   │   │   │   ├── Sidebar.tsx
+│   │   │   │   ├── ThemeProvider.tsx
+│   │   │   │   └── ThemeToggle.tsx
+│   │   │   └── workspace/   # Workspace components
+│   │   │       └── WorkspaceSelector.tsx
 │   │   ├── hooks/           # Custom React hooks
+│   │   │   ├── useAutoLabel.ts
+│   │   │   ├── useAutoSave.ts
+│   │   │   └── useChat.ts
 │   │   ├── lib/             # API clients & utilities
+│   │   │   ├── api.ts
+│   │   │   ├── constants.ts
+│   │   │   ├── stream.ts
+│   │   │   └── workspace.ts
 │   │   ├── stores/          # Zustand state stores
+│   │   │   ├── chatStore.ts
+│   │   │   ├── jdStore.ts
+│   │   │   └── themeStore.ts
 │   │   └── types/           # TypeScript definitions
-│   └── package.json
+│   │       ├── api.ts
+│   │       ├── chat.ts
+│   │       ├── jd.ts
+│   │       └── workspace.ts
+│   ├── package.json
+│   ├── next.config.ts
+│   └── tsconfig.json
 │
 ├── backend/                  # FastAPI Application
 │   ├── app/
 │   │   ├── api/v1/          # API route handlers
+│   │   │   ├── chat.py      # Chat streaming endpoint
+│   │   │   ├── jd_sets.py   # JD set management
+│   │   │   ├── labels.py    # Label extraction
+│   │   │   └── router.py    # API router
 │   │   ├── db/              # Database configuration
+│   │   │   ├── base.py
+│   │   │   └── session.py
 │   │   ├── models/          # SQLAlchemy ORM models
+│   │   │   ├── chat_session.py
+│   │   │   ├── jd_item.py
+│   │   │   ├── jd_set.py
+│   │   │   └── user.py
 │   │   ├── schemas/         # Pydantic data models
+│   │   │   ├── chat.py
+│   │   │   ├── jd_set.py
+│   │   │   └── label.py
 │   │   ├── services/        # Business logic
+│   │   │   ├── label_extractor.py
 │   │   │   └── llm/         # LLM provider implementations
+│   │   │       ├── anthropic_provider.py
+│   │   │       ├── base.py
+│   │   │       ├── factory.py
+│   │   │       ├── openai_provider.py
+│   │   │       └── prompt_builder.py
+│   │   ├── config.py        # Application configuration
 │   │   └── main.py          # Application entry point
 │   ├── alembic/             # Database migrations
-│   ├── tests/               # Test suite
-│   └── pyproject.toml
+│   │   └── versions/
+│   │       └── 001_initial_schema.py
+│   ├── pyproject.toml
+│   └── Dockerfile
 │
 └── docker-compose.yml       # Local development orchestration
 ```
@@ -166,6 +224,8 @@ Implemented a clean factory pattern that abstracts LLM providers, enabling seaml
 
 ```python
 # Factory pattern for provider switching
+from app.services.llm.factory import LLMFactory
+
 provider = LLMFactory.create(settings.provider)
 async for token in provider.stream_chat(messages):
     yield token
@@ -221,27 +281,36 @@ NEXT_PUBLIC_API_URL=http://localhost:8000
 
 ---
 
-## 🧪 Testing
+## 📡 API Endpoints
 
-```bash
-# Backend tests
-cd backend
-pytest -v --cov=app
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/v1/chat` | POST | Streaming chat completion with SSE |
+| `/api/v1/jd-sets` | GET/POST | Manage JD sets |
+| `/api/v1/jd-sets/{id}` | GET/PUT/DELETE | Individual JD set operations |
+| `/api/v1/labels/extract` | POST | Extract labels from JD text |
 
-# Frontend tests
-cd frontend
-npm test
-```
+View full API documentation at `http://localhost:8000/docs` when running locally.
 
 ---
 
-## 📊 Performance Metrics
+## 🧪 Development
 
-- **Time to First Byte**: < 100ms (Next.js SSR)
-- **First Contentful Paint**: < 1.5s
-- **Bundle Size**: 141 KB (gzipped)
-- **API Response Time**: < 50ms (p95)
-- **Streaming Latency**: Real-time token delivery
+### Code Quality
+
+**Backend:**
+```bash
+cd backend
+ruff check app/          # Linting
+mypy app/                # Type checking
+```
+
+**Frontend:**
+```bash
+cd frontend
+npm run lint             # ESLint
+npm run build            # TypeScript compilation
+```
 
 ---
 
@@ -252,27 +321,13 @@ npm test
 - [ ] **Collaboration**: Share JD comparisons via unique URLs
 - [ ] **Chrome Extension**: One-click JD import from job boards
 - [ ] **Export**: PDF/Word report generation
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) for details on code style, testing, and pull request procedures.
+- [ ] **Test Suite**: Comprehensive backend and frontend tests
 
 ---
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 👨‍💻 Author
-
-**Your Name** - Full-Stack Developer passionate about AI-powered productivity tools
-
-- LinkedIn: [linkedin.com/in/yourprofile](https://linkedin.com/in/yourprofile)
-- Portfolio: [yourportfolio.com](https://yourportfolio.com)
+MIT License - see LICENSE file for details.
 
 ---
 
