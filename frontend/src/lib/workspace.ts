@@ -1,5 +1,11 @@
 import { API_BASE } from "./constants";
-import type { WorkspaceDetail } from "@/types/workspace";
+import type { WorkspaceDetail, WorkspaceSummary } from "@/types/workspace";
+
+export async function listWorkspaces(): Promise<WorkspaceSummary[]> {
+  const res = await fetch(`${API_BASE}/api/v1/jd-sets`);
+  if (!res.ok) throw new Error("Failed to list workspaces");
+  return res.json();
+}
 
 export async function createWorkspace(
   name?: string

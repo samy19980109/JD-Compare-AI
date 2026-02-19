@@ -8,8 +8,7 @@ import { MainContent } from "@/components/layout/MainContent";
 import { ChatPanel } from "@/components/chat/ChatPanel";
 import { useAutoSave } from "@/hooks/useAutoSave";
 import { createWorkspace, loadWorkspace } from "@/lib/workspace";
-
-const WORKSPACE_KEY = "jdcompare_workspace_id";
+import { WORKSPACE_KEY } from "@/lib/constants";
 
 function useWorkspaceInit() {
   const setWorkspaceId = useJDStore((s) => s.setWorkspaceId);

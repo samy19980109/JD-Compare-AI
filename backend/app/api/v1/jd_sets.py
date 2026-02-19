@@ -15,10 +15,26 @@ from app.schemas.jd_set import (
     JDItemResponse,
     JDSetCreate,
     JDSetDetail,
+    JDSetSummary,
     JDSetUpdate,
 )
 
 router = APIRouter()
+
+
+@router.get("", response_model=list[JDSetSummary])
+async def list_jd_sets(db: AsyncSession = Depends(get_db)):
+    result = await db.execute(
+        select(JDSet.id, JDSet.name, func.count(JDItem.id).label("item_count"), JDSet.updated_at)
+        .outerjoin(JDItem, JDItem.jd_set_id == JDSet.id)
+        .group_by(JDSet.id)
+        .order_by(JDSet.updated_at.desc())
+    )
+    rows = result.all()
+    return [
+        JDSetSummary(id=str(row.id), name=row.name, item_count=row.item_count, updated_at=row.updated_at)
+        for row in rows
+    ]
 
 
 def _set_to_detail(jd_set: JDSet) -> JDSetDetail:
@@ -66,10 +82,14 @@ async def create_jd_set(body: JDSetCreate, db: AsyncSession = Depends(get_db)):
     db.add(jd_set)
     await db.commit()
     await db.refresh(jd_set)
-    # Eager load empty relations
-    jd_set.items = []
-    jd_set.chat_sessions = []
-    return _set_to_detail(jd_set)
+    # New workspace has no items or messages — build response directly
+    return JDSetDetail(
+        id=str(jd_set.id),
+        name=jd_set.name,
+        items=[],
+        chat_messages=[],
+        updated_at=jd_set.updated_at,
+    )
 
 
 @router.get("/{jd_set_id}", response_model=JDSetDetail)

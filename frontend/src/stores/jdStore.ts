@@ -18,6 +18,7 @@ interface JDStore {
   setLabel: (id: string, title: string | null, company: string | null) => void;
   setLabelLoading: (id: string, loading: boolean) => void;
   getActiveCards: () => JDCard[];
+  resetForSwitch: () => void;
 }
 
 function createEmptyCard(): JDCard {
@@ -91,4 +92,11 @@ export const useJDStore = create<JDStore>((set, get) => ({
     })),
 
   getActiveCards: () => get().cards.filter((c) => !c.isMuted && c.text.trim()),
+
+  resetForSwitch: () =>
+    set({
+      cards: [createEmptyCard()],
+      workspaceId: null,
+      workspaceName: "Untitled Workspace",
+    }),
 }));

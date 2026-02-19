@@ -15,6 +15,13 @@ export interface WorkspaceChatMessage {
   created_at: string;
 }
 
+export interface WorkspaceSummary {
+  id: string;
+  name: string;
+  item_count: number;
+  updated_at: string;
+}
+
 export interface WorkspaceDetail {
   id: string;
   name: string;

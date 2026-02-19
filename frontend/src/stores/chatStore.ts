@@ -25,6 +25,7 @@ interface ChatStore {
   setError: (error: string | null) => void;
   clearMessages: () => void;
   loadMessages: (messages: WorkspaceChatMessage[]) => void;
+  resetMessages: () => void;
 }
 
 export const useChatStore = create<ChatStore>((set) => ({
@@ -102,4 +103,6 @@ export const useChatStore = create<ChatStore>((set) => ({
       })),
       error: null,
     }),
+
+  resetMessages: () => set({ messages: [], error: null, isStreaming: false }),
 }));
