@@ -2,7 +2,7 @@ import uuid
 
 from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.base import Base, TimestampMixin
 
@@ -18,5 +18,3 @@ class User(Base, TimestampMixin):
     provider: Mapped[str | None] = mapped_column(String(50), nullable=True)
     provider_account_id: Mapped[str | None] = mapped_column(String(255), nullable=True)
     preferred_llm: Mapped[str] = mapped_column(String(20), default="openai")
-
-    jd_sets = relationship("JDSet", back_populates="user", cascade="all, delete-orphan")

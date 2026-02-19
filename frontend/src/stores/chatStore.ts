@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { v4 as uuidv4 } from "uuid";
 import type { ChatMessageUI } from "@/types/chat";
 import type { Provider } from "@/types/api";
+import type { WorkspaceChatMessage } from "@/types/workspace";
 
 type Tab = "jd" | "chat";
 
@@ -23,6 +24,7 @@ interface ChatStore {
   finishMessage: (id: string) => void;
   setError: (error: string | null) => void;
   clearMessages: () => void;
+  loadMessages: (messages: WorkspaceChatMessage[]) => void;
 }
 
 export const useChatStore = create<ChatStore>((set) => ({
@@ -88,4 +90,16 @@ export const useChatStore = create<ChatStore>((set) => ({
   setError: (error) => set({ error, isStreaming: false }),
 
   clearMessages: () => set({ messages: [], error: null }),
+
+  loadMessages: (messages) =>
+    set({
+      messages: messages.map((m) => ({
+        id: m.id,
+        role: m.role,
+        content: m.content,
+        timestamp: new Date(m.created_at).getTime(),
+        isStreaming: false,
+      })),
+      error: null,
+    }),
 }));

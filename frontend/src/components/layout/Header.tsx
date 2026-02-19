@@ -2,6 +2,7 @@
 
 import { useChatStore } from "@/stores/chatStore";
 import { ThemeToggle } from "./ThemeToggle";
+import { WorkspaceSelector } from "@/components/workspace/WorkspaceSelector";
 import type { Provider } from "@/types/api";
 
 export function Header() {
@@ -14,6 +15,8 @@ export function Header() {
         <span className="rounded bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700 dark:bg-blue-900/40 dark:text-blue-300">
           Beta
         </span>
+        <span className="text-gray-300 dark:text-gray-600">|</span>
+        <WorkspaceSelector />
       </div>
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-2">

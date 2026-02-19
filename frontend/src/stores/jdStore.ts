@@ -1,9 +1,16 @@
 import { create } from "zustand";
 import { v4 as uuidv4 } from "uuid";
 import type { JDCard } from "@/types/jd";
+import type { WorkspaceItem } from "@/types/workspace";
 
 interface JDStore {
   cards: JDCard[];
+  workspaceId: string | null;
+  workspaceName: string;
+
+  setWorkspaceId: (id: string | null) => void;
+  setWorkspaceName: (name: string) => void;
+  loadFromWorkspace: (items: WorkspaceItem[]) => void;
   addCard: () => void;
   removeCard: (id: string) => void;
   updateCardText: (id: string, text: string) => void;
@@ -26,6 +33,26 @@ function createEmptyCard(): JDCard {
 
 export const useJDStore = create<JDStore>((set, get) => ({
   cards: [createEmptyCard()],
+  workspaceId: null,
+  workspaceName: "Untitled Workspace",
+
+  setWorkspaceId: (id) => set({ workspaceId: id }),
+  setWorkspaceName: (name) => set({ workspaceName: name }),
+
+  loadFromWorkspace: (items) =>
+    set({
+      cards:
+        items.length > 0
+          ? items.map((item) => ({
+              id: item.id,
+              text: item.raw_text,
+              labelTitle: item.label_title,
+              labelCompany: item.label_company,
+              isMuted: item.is_muted,
+              isLabelLoading: false,
+            }))
+          : [createEmptyCard()],
+    }),
 
   addCard: () =>
     set((state) => ({ cards: [...state.cards, createEmptyCard()] })),

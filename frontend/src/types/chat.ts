@@ -17,4 +17,5 @@ export interface ChatRequest {
   messages: { role: "user" | "assistant"; content: string }[];
   user_message: string;
   provider: "openai" | "anthropic";
+  jd_set_id?: string | null;
 }

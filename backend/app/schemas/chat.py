@@ -22,3 +22,4 @@ class ChatRequest(BaseModel):
     user_message: str
     provider: Literal["openai", "anthropic"] = "openai"
     model: str | None = None
+    jd_set_id: str | None = None

@@ -6,6 +6,7 @@ import type { ChatRequest } from "@/types/chat";
 
 export function useChat() {
   const cards = useJDStore((s) => s.cards);
+  const workspaceId = useJDStore((s) => s.workspaceId);
   const {
     messages,
     provider,
@@ -39,6 +40,7 @@ export function useChat() {
         })),
         user_message: userMessage,
         provider,
+        jd_set_id: workspaceId,
       };
 
       const assistantId = startAssistantMessage();
@@ -62,6 +64,7 @@ export function useChat() {
       cards,
       messages,
       provider,
+      workspaceId,
       isStreaming,
       addUserMessage,
       startAssistantMessage,
